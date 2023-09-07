@@ -5,11 +5,7 @@ import edu.javacourse.city.domain.PersonRequest;
 import edu.javacourse.city.domain.PersonResponse;
 import edu.javacourse.city.exception.PersonCheckException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import java.sql.*;
 
 public class PersonCheckDao {
 
@@ -28,8 +24,34 @@ public class PersonCheckDao {
     public PersonResponse checkPerson(PersonRequest request) throws PersonCheckException {
         PersonResponse response = new PersonResponse();
 
+        String sql = SQL_REQUEST;
+        if(request.getExtension() != null) {
+            sql += "and upper(a.extension COLLATE \"en_US.UTF-8\") = upper(? COLLATE\"en_US.UTF-8\")";
+        } else {
+            sql += "and extension is null ";
+        }
+        if(request.getApartment() != null) {
+            sql += "and upper(a.apartment COLLATE \"en_US.UTF-8\") = upper(? COLLATE\"en_US.UTF-8\")";
+        } else {
+            sql += "and a.apartment is null ";
+        }
+
         try(Connection con = getConnection();
             PreparedStatement stmt = con.prepareStatement(SQL_REQUEST)) {
+
+            int count = 1;
+            stmt.setString(count++, request.getSurName());
+            stmt.setString(count++, request.getGivenName());
+            stmt.setString(count++, request.getPatronymic());
+            stmt.setDate(count++, java.sql.Date.valueOf(request.getDatOfBirth()));
+            stmt.setInt(count++, request.getStreetCode());
+            stmt.setString(count++, request.getBuilding());
+            if(request.getExtension() != null) {
+                stmt.setString(count++, request.getExtension());
+            }
+            if(request.getApartment() != null) {
+                stmt.setString(count++, request.getApartment());
+            }
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
@@ -42,4 +64,7 @@ public class PersonCheckDao {
         return response;
     }
 
+    private Connection getConnection() throws SQLException {
+        return (Connection) DriverManager.getConnection("jdbc:postgresql://localhost/city_register", "postgres", "postgres");
+    }
 }
