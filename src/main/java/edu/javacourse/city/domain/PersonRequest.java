@@ -5,12 +5,21 @@ import java.time.LocalDate;
 public class PersonRequest {
 
     private String surName;
-    private String gvenName;
+    private String givenName;
     private String patronymic;
     private LocalDate datOfBirth;
+    private Integer streetCode;
     private String building;
     private String extension;
     private String apartment;
+
+    public Integer getStreetCode() {
+        return streetCode;
+    }
+
+    public void setStreetCode(Integer streetCode) {
+        this.streetCode = streetCode;
+    }
 
     public String getSurName() {
         return surName;
@@ -20,12 +29,12 @@ public class PersonRequest {
         this.surName = surName;
     }
 
-    public String getGvenName() {
-        return gvenName;
+    public String getGivenName() {
+        return givenName;
     }
 
-    public void setGvenName(String gvenName) {
-        this.gvenName = gvenName;
+    public void setGivenName(String gvenName) {
+        this.givenName = gvenName;
     }
 
     public String getPatronymic() {
