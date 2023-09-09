@@ -6,33 +6,51 @@ import java.net.Socket;
 
 public class Server {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         ServerSocket socket = new ServerSocket(25225);
 
         System.out.println("Server is started.");
         while(true) {
             Socket client = socket.accept();
-            handleRequest(client);
+            new SimpleServer(client).start();
         }
     }
+}
 
-    public static void handleRequest(Socket client) throws IOException, InterruptedException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+class SimpleServer extends Thread {
 
-        StringBuilder sb = new StringBuilder("Hello, ");
-        String userName = String.valueOf(br.read());
-        System.out.println("Server got string: " + userName);
-        Thread.sleep(10000);
+    private Socket client;
 
-        sb.append(userName);
-        bw.write(sb.toString());
-        bw.newLine();
-        bw.flush();
+    public SimpleServer(Socket client) {
+        this.client = client;
+    }
 
-        br.close();
-        bw.close();
+    @Override
+    public void run() {
+        handleRequest();
+    }
 
-        client.close();
+    public void handleRequest() {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+
+            StringBuilder sb = new StringBuilder("Hello, ");
+            String userName = String.valueOf(br.read());
+            System.out.println("Server got string: " + userName);
+            Thread.sleep(10000);
+
+            sb.append(userName);
+            bw.write(sb.toString());
+            bw.newLine();
+            bw.flush();
+
+            br.close();
+            bw.close();
+
+            client.close();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }
