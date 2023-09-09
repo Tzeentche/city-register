@@ -16,13 +16,14 @@ public class Server {
         }
     }
 
-    public static void handleRequest(Socket client) throws IOException {
+    public static void handleRequest(Socket client) throws IOException, InterruptedException {
         BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 
         StringBuilder sb = new StringBuilder("Hello, ");
         String userName = String.valueOf(br.read());
         System.out.println("Server got string: " + userName);
+        Thread.sleep(10000);
 
         sb.append(userName);
         bw.write(sb.toString());
