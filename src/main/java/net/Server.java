@@ -1,4 +1,4 @@
-package Server;
+package net;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -9,6 +9,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket socket = new ServerSocket(25225);
 
+        System.out.println("Server is started.");
         while(true) {
             Socket client = socket.accept();
             handleRequest(client);
@@ -21,6 +22,7 @@ public class Server {
 
         StringBuilder sb = new StringBuilder("Hello, ");
         String userName = String.valueOf(br.read());
+        System.out.println("Server got string: " + userName);
 
         sb.append(userName);
         bw.write(sb.toString());
