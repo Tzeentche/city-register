@@ -1,6 +1,5 @@
 package edu.javacourse.city.dao;
 
-import com.sun.jdi.connect.spi.Connection;
 import edu.javacourse.city.domain.PersonRequest;
 import edu.javacourse.city.domain.PersonResponse;
 import edu.javacourse.city.exception.PersonCheckException;
@@ -36,8 +35,11 @@ public class PersonCheckDao {
             sql += "and a.apartment is null ";
         }
 
-        try(Connection con = getConnection();
-            PreparedStatement stmt = con.prepareStatement(SQL_REQUEST)) {
+        try {
+
+            Connection con = getConnection();
+            PreparedStatement stmt = (PreparedStatement) con;
+//            .preparedStatement(sql);
 
             int count = 1;
             stmt.setString(count++, request.getSurName());
