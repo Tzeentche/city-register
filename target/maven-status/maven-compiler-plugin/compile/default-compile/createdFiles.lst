@@ -1,5 +1,6 @@
 net\SimpleClient.class
 net\Server.class
+edu\javacourse\city\web\CheckPersonServlet.class
 edu\javacourse\city\dao\PersonCheckDao.class
 edu\javacourse\city\domain\PersonResponse.class
 net\Client.class
